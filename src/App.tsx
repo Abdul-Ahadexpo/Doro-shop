@@ -24,7 +24,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   
   // The admin password - in a real app, this would be handled securely on the server
-  const ADMIN_PASSWORD = 'admin123';
+  const ADMIN_PASSWORD = 'foking123';
 
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
