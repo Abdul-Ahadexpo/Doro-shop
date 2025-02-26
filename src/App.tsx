@@ -41,21 +41,20 @@ function App() {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  // ✅ Cart functions (should NOT be inside handleCheckout)
-  const addToCart = (product) => {
-    setCart((currentCart) => {
-      const updatedCart = [...currentCart];
-      const existingItem = updatedCart.find((item) => item.id === product.id);
+const addToCart = (product: Product) => {
+  setCart((currentCart) => {
+    const existingItem = currentCart.find((item) => item.id === product.id);
+    if (existingItem) {
+      return currentCart.map((item) =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    }
+    return [...currentCart, { ...product, quantity: 1 }];
+  });
+};
 
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        updatedCart.push({ ...product, quantity: 1 });
-      }
-
-      return updatedCart;
-    });
-  };
 
   const removeFromCart = (productId) => {
     setCart((currentCart) => currentCart.filter((item) => item.id !== productId));
