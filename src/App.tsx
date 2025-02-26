@@ -26,7 +26,6 @@ function App() {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [cart, setCart] = useState([]); // ✅ Add this to track the cart
 
   // ✅ Load cart from localStorage when the page loads
   useEffect(() => {
@@ -43,9 +42,9 @@ function App() {
 
 const addToCart = (product: Product) => {
   setCart((currentCart) => {
-    const existingItem = currentCart.find((item) => item.id === product.id);
+    const existingItem = currentCart.find(item => item.id === product.id);
     if (existingItem) {
-      return currentCart.map((item) =>
+      return currentCart.map(item =>
         item.id === product.id
           ? { ...item, quantity: item.quantity + 1 }
           : item
@@ -54,6 +53,7 @@ const addToCart = (product: Product) => {
     return [...currentCart, { ...product, quantity: 1 }];
   });
 };
+
 
 
   const removeFromCart = (productId) => {
@@ -99,17 +99,6 @@ const addToCart = (product: Product) => {
 
 
 
-useEffect(() => {
-  const storedCart = localStorage.getItem("cart");
-  if (storedCart) {
-    setCart(JSON.parse(storedCart));
-  }
-}, []);
-
-
-
-
-
 
 
   
@@ -126,10 +115,12 @@ useEffect(() => {
     (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const productsArray = Object.entries(data).map(([id, product]) => ({
-          id,
-          ...(product as Omit<Product, "id">),
-        }));
+      const productsArray = Object.entries(data).map(([id, product]) => ({
+  id,
+  ...(typeof product === "object" ? (product as Omit<Product, "id">) : {}),
+}));
+
+        
         setProducts(productsArray);
       } else {
         setProducts([]); // ✅ Important: Set empty array if no data
@@ -181,9 +172,9 @@ useEffect(() => {
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setCart(cart.filter(item => item.id !== productId));
-  };
+const removeFromCart = (productId: string) => { ... };
+const updateQuantity = (productId: string, newQuantity: number) => { ... };
+
 
   const updateQuantity = (productId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
