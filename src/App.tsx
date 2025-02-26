@@ -316,7 +316,10 @@ useEffect(() => {
                     <span>{cartTotal.toFixed(2)} TK</span>
                   </div>
                   
-                  <button onClick={handleCheckout} className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">Proceed to Checkout</button>
+                 <button onClick={() => { localStorage.setItem("cart", JSON.stringify(cart)); // Save cart in localStorage
+    window.location.href = "checkout.html"; // Redirect to checkout page
+  }} className="w-full py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Checkout</button>
+
                   
                 </div>
               </>
