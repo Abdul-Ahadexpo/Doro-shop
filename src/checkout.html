@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
 </head>
+
 <body>
-    <h1>Checkout</h1>
-    <div id="cart-items"></div>
+  <h1>Checkout</h1>
+  <div id="cart-items"></div>
 
-    <script>
-        // Retrieve cart data from localStorage
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  <script>
+    // Retrieve cart data from localStorage
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        // Get the cart items container
-        const cartItemsContainer = document.getElementById("cart-items");
+    // Get the cart items container
+    const cartItemsContainer = document.getElementById("cart-items");
 
-        // Check if the cart is empty
-        if (cart.length === 0) {
-            cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
-        } else {
-            cart.forEach(item => {
-                const itemElement = document.createElement("div");
-                itemElement.innerHTML = `
+    // Check if the cart is empty
+    if (cart.length === 0) {
+      cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+    } else {
+      cart.forEach(item => {
+        const itemElement = document.createElement("div");
+        itemElement.innerHTML = `
                     <h3>${item.name}</h3>
                     <p>Price: BDT ${item.price}</p>
                     <p>Quantity: ${item.quantity}</p>
                     <hr>
                 `;
-                cartItemsContainer.appendChild(itemElement);
-            });
-        }
-    </script>
+        cartItemsContainer.appendChild(itemElement);
+      });
+    }
+  </script>
 </body>
+
 </html>
