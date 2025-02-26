@@ -22,6 +22,11 @@ function App() {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  // handleCheckout
+const handleCheckout = () => {
+  window.location.href = '../checkout.html';
+};
+
   
   // The admin password - in a real app, this would be handled securely on the server
   const ADMIN_PASSWORD = 'foking123';
@@ -310,9 +315,9 @@ useEffect(() => {
                     <span></span>
                     <span>{cartTotal.toFixed(2)} TK</span>
                   </div>
-                  <button className="w-full mt-4 py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-                    Checkout
-                  </button>
+                  
+                  <button onClick={handleCheckout} className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">Proceed to Checkout</button>
+                  
                 </div>
               </>
             )}
