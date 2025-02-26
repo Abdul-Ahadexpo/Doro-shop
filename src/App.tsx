@@ -24,7 +24,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   // handleCheckout
 const handleCheckout = () => {
-  window.location.href = '../checkout.html';
+  window.location.href = './checkout.html';
 };
 
   
@@ -317,7 +317,7 @@ useEffect(() => {
                   </div>
                   
                  <button onClick={() => { localStorage.setItem("cart", JSON.stringify(cart)); // Save cart in localStorage
-    window.location.href = "checkout.html"; // Redirect to checkout page
+    window.location.href = "./checkout.html"; // Redirect to checkout page
   }} className="w-full py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Checkout</button>
 
                   
