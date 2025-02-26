@@ -9,6 +9,7 @@ interface Product {
   price: number;
   description: string;
   image: string;
+  chatLink?: string; // Added chat link field
 }
 
 interface CartItem extends Product {
@@ -22,11 +23,15 @@ function App() {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  // handleCheckout
-const handleCheckout = () => {
-  window.location.href = './checkout.html';
-};
-
+  
+  // handleCheckout - now redirects to the chat link of the first item in cart
+  function handleCheckout() {
+    if (cart.length > 0 && cart[0].chatLink) {
+      window.open(cart[0].chatLink, '_blank');
+    } else {
+      alert('No chat link available for this product.');
+    }
+  }
   
   // The admin password - in a real app, this would be handled securely on the server
   const ADMIN_PASSWORD = 'foking123';
@@ -38,7 +43,8 @@ const handleCheckout = () => {
     name: '',
     price: 0,
     description: '',
-    image: ''
+    image: '',
+    chatLink: '' // Added chat link field
   });
 
 useEffect(() => {
@@ -127,10 +133,11 @@ useEffect(() => {
         name: newProduct.name,
         price: Number(newProduct.price),
         description: newProduct.description,
-        image: newProduct.image
+        image: newProduct.image,
+        chatLink: newProduct.chatLink || '' // Include chat link
       });
       
-      setNewProduct({ name: '', price: 0, description: '', image: '' });
+      setNewProduct({ name: '', price: 0, description: '', image: '', chatLink: '' });
     } catch (error) {
       console.error('Error adding product:', error);
       alert('Failed to add product. Please try again.');
@@ -162,11 +169,12 @@ useEffect(() => {
         name: newProduct.name,
         price: Number(newProduct.price),
         description: newProduct.description,
-        image: newProduct.image
+        image: newProduct.image,
+        chatLink: newProduct.chatLink || '' // Include chat link
       });
       
       setEditingProduct(null);
-      setNewProduct({ name: '', price: 0, description: '', image: '' });
+      setNewProduct({ name: '', price: 0, description: '', image: '', chatLink: '' });
     } catch (error) {
       console.error('Error updating product:', error);
       alert('Failed to update product. Please try again.');
@@ -259,75 +267,71 @@ useEffect(() => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Shopping Cart Sidebar */}
-        {showCart && (
-          <div className="fixed inset-y-0 right-0 w-96 bg-white shadow-xl p-6 overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Shopping Cart</h2>
-              <button
-                onClick={() => setShowCart(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                ×
-              </button>
-            </div>
-            {cart.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">Your cart is empty</p>
-            ) : (
-              <>
-                <div className="space-y-4">
-                  {cart.map(item => (
-                    <div key={item.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-medium">{item.name}</h3>
-                        <p className="text-gray-600">{item.price} TK</p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="px-2 py-1 bg-gray-200 rounded"
-                          >
-                            -
-                          </button>
-                          <span>{item.quantity}</span>
-                          <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="px-2 py-1 bg-gray-200 rounded"
-                          >
-                            +
-                          </button>
+          {showCart && (
+            <div className="fixed inset-y-0 right-0 w-96 bg-white shadow-xl p-6 overflow-y-auto z-40">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold">Shopping Cart</h2>
+                <button
+                  onClick={() => setShowCart(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+              {cart.length === 0 ? (
+                <p className="text-gray-500 text-center py-8">Your cart is empty</p>
+              ) : (
+                <>
+                  <div className="space-y-4">
+                    {cart.map(item => (
+                      <div key={item.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
+                        <div className="flex-1">
+                          <h3 className="font-medium">{item.name}</h3>
+                          <p className="text-gray-600">{item.price} TK</p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <button
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              className="px-2 py-1 bg-gray-200 rounded"
+                            >
+                              -
+                            </button>
+                            <span>{item.quantity}</span>
+                            <button
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              className="px-2 py-1 bg-gray-200 rounded"
+                            >
+                              +
+                            </button>
+                          </div>
                         </div>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
                       </div>
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6 pt-6 border-t">
-                  <div className="flex justify-between text-lg font-semibold">
-                    <span></span>
-                    <span>{cartTotal.toFixed(2)} TK</span>
+                    ))}
                   </div>
-                  
-                 <button onClick={() => { localStorage.setItem("cart", JSON.stringify(cart)); // Save cart in localStorage
-    window.location.href = "./checkout.html"; // Redirect to checkout page
-  }} className="w-full py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Checkout</button>
+                  <div className="mt-6 pt-6 border-t">
+                    <div className="flex justify-between text-lg font-semibold">
+                      <span>Total</span>
+                      <span>{cartTotal.toFixed(2)} TK</span>
+                    </div>
+                    <button
+                      onClick={handleCheckout}
+                      className="w-full py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 mt-4"
+                    >
+                      Chat with Seller
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
-                  
-                </div>
-              </>
-            )}
-          </div>
-        )}
-
-        {/* Admin Panel */}
+          {/* Admin Panel */}
         {isAdmin ? (
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-6">Admin Panel</h2>
@@ -361,6 +365,13 @@ useEffect(() => {
                   onChange={e => setNewProduct({ ...newProduct, image: e.target.value })}
                   className="w-full px-4 py-2 border rounded-lg"
                 />
+                <input
+                  type="text"
+                  placeholder="Chat Link (WhatsApp/Instagram/Messenger)"
+                  value={newProduct.chatLink || ''}
+                  onChange={e => setNewProduct({ ...newProduct, chatLink: e.target.value })}
+                  className="w-full px-4 py-2 border rounded-lg"
+                />
                 <button
                   onClick={editingProduct ? saveEdit : addProduct}
                   className="w-full py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center justify-center gap-2"
@@ -392,6 +403,11 @@ useEffect(() => {
                       <div className="flex-1">
                         <h4 className="font-medium">{product.name}</h4>
                         <p className="text-gray-600">{product.price} TK</p>
+                        {product.chatLink && (
+                          <p className="text-xs text-gray-500 truncate">
+                            Chat: {product.chatLink}
+                          </p>
+                        )}
                       </div>
                       <div className="flex gap-2">
                         <button
@@ -417,25 +433,21 @@ useEffect(() => {
           /* Store Front */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map(product => (
-              <div key={product.id} className="bg-white rounded-lg shadow overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                  <p className="text-gray-600 mb-4">{product.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold">{product.price} TK</span>
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
-                    >
-                      <ShoppingCart className="w-5 h-5" />
-                      Add to Cart
-                    </button>
-                  </div>
+              <div key={product.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col">
+                <div className="flex justify-center mb-4">
+                  <img src={product.image} alt={product.name} className="w-32 h-32 object-cover rounded-lg" />
+                </div>
+                <h2 className="text-lg font-semibold">{product.name}</h2>
+                <p className="text-gray-500 text-sm my-2">{product.description}</p>
+                <div className="mt-auto pt-4 flex items-center justify-between">
+                  <span className="text-xl font-bold">{product.price} TK</span>
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             ))}
