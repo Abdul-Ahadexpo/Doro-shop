@@ -279,7 +279,7 @@ useEffect(() => {
                       />
                       <div className="flex-1">
                         <h3 className="font-medium">{item.name}</h3>
-                        <p className="text-gray-600">{item.price}TK</p>
+                        <p className="text-gray-600">{item.price} TK</p>
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -308,7 +308,7 @@ useEffect(() => {
                 <div className="mt-6 pt-6 border-t">
                   <div className="flex justify-between text-lg font-semibold">
                     <span></span>
-                    <span>${cartTotal.toFixed(2)}TK</span>
+                    <span>{cartTotal.toFixed(2)} TK</span>
                   </div>
                   <button className="w-full mt-4 py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
                     Checkout
@@ -383,7 +383,7 @@ useEffect(() => {
                       />
                       <div className="flex-1">
                         <h4 className="font-medium">{product.name}</h4>
-                        <p className="text-gray-600">{product.price}TK</p>
+                        <p className="text-gray-600">{product.price} TK</p>
                       </div>
                       <div className="flex gap-2">
                         <button
@@ -419,7 +419,7 @@ useEffect(() => {
                   <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
                   <p className="text-gray-600 mb-4">{product.description}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold">{product.price}TK</span>
+                    <span className="text-2xl font-bold">{product.price} TK</span>
                     <button
                       onClick={() => addToCart(product)}
                       className="py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
