@@ -525,6 +525,6 @@ const updateQuantity = (productId: string, newQuantity: number) => {
       </main>
     </div>
   );
-}
+
 
 export default App;
