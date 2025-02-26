@@ -172,8 +172,21 @@ useEffect(() => {
     });
   };
 
-const removeFromCart = (productId: string) => { ... };
-const updateQuantity = (productId: string, newQuantity: number) => { ... };
+
+
+
+
+const removeFromCart = (productId: string) => {
+  console.log("Removing product:", productId);
+};
+
+const updateQuantity = (productId: string, newQuantity: number) => {
+  console.log("Updating quantity:", productId, newQuantity);
+};
+
+
+
+
 
 
   const updateQuantity = (productId: string, newQuantity: number) => {
