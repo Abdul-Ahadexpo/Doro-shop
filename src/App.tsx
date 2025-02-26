@@ -15,10 +15,6 @@ interface CartItem extends Product {
   quantity: number;
 }
 
-
-
-
-
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showCart, setShowCart] = useState(false);
@@ -26,61 +22,10 @@ function App() {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  // ✅ Load cart from localStorage when the page loads
-  useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
-    }
-  }, []);
-
-  // ✅ Store cart in localStorage when cart updates
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
-const addToCart = (product: Product) => {
-  setCart((currentCart) => {
-    const existingItem = currentCart.find(item => item.id === product.id);
-    if (existingItem) {
-      return currentCart.map(item =>
-        item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
-    }
-    return [...currentCart, { ...product, quantity: 1 }];
-  });
+  // handleCheckout
+const handleCheckout = () => {
+  window.location.href = '../checkout.html';
 };
-
-
-
-  const removeFromCart = (productId) => {
-    setCart((currentCart) => currentCart.filter((item) => item.id !== productId));
-  };
-
-  const updateQuantity = (productId, newQuantity) => {
-    if (newQuantity < 1) return;
-
-    setCart((currentCart) =>
-      currentCart.map((item) =>
-        item.id === productId ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  // ✅ Checkout function (only handles redirection)
-  const handleCheckout = () => {
-    localStorage.setItem("cart", JSON.stringify(cart)); // Save before redirecting
-    window.location.href = ".././checkout.html";
-  };
-}
-
-
-
-
-
 
   
   // The admin password - in a real app, this would be handled securely on the server
@@ -96,17 +41,6 @@ const addToCart = (product: Product) => {
     image: ''
   });
 
-
-
-
-
-
-  
-
-
-
-
-  
 useEffect(() => {
   const productsRef = ref(db, "products");
 
@@ -115,12 +49,10 @@ useEffect(() => {
     (snapshot) => {
       const data = snapshot.val();
       if (data) {
-      const productsArray = Object.entries(data).map(([id, product]) => ({
-  id,
-  ...(typeof product === "object" ? (product as Omit<Product, "id">) : {}),
-}));
-
-        
+        const productsArray = Object.entries(data).map(([id, product]) => ({
+          id,
+          ...(product as Omit<Product, "id">),
+        }));
         setProducts(productsArray);
       } else {
         setProducts([]); // ✅ Important: Set empty array if no data
@@ -158,9 +90,9 @@ useEffect(() => {
     }
   };
 
-  const addTo = (product: Product) => {
-    set(current => {
-      const existingItem = current.find(item => item.id === product.id);
+  const addToCart = (product: Product) => {
+    setCart(currentCart => {
+      const existingItem = currentCart.find(item => item.id === product.id);
       if (existingItem) {
         return currentCart.map(item =>
           item.id === product.id
@@ -172,22 +104,9 @@ useEffect(() => {
     });
   };
 
-
-
-
-
-const removeFromCart = (productId: string) => {
-  console.log("Removing product:", productId);
-};
-
-const updateQuantity = (productId: string, newQuantity: number) => {
-  console.log("Updating quantity:", productId, newQuantity);
-};
-
-
-
-
-
+  const removeFromCart = (productId: string) => {
+    setCart(cart.filter(item => item.id !== productId));
+  };
 
   const updateQuantity = (productId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -398,7 +317,7 @@ const updateQuantity = (productId: string, newQuantity: number) => {
                   </div>
                   
                  <button onClick={() => { localStorage.setItem("cart", JSON.stringify(cart)); // Save cart in localStorage
-    window.location.href = ".././checkout.html"; // Redirect to checkout page
+    window.location.href = "checkout.html"; // Redirect to checkout page
   }} className="w-full py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Checkout</button>
 
                   
@@ -525,6 +444,6 @@ const updateQuantity = (productId: string, newQuantity: number) => {
       </main>
     </div>
   );
-
+}
 
 export default App;
