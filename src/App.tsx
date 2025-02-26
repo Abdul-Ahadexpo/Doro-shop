@@ -308,7 +308,7 @@ useEffect(() => {
                 <div className="mt-6 pt-6 border-t">
                   <div className="flex justify-between text-lg font-semibold">
                     <span></span>
-                    <span>${cartTotal.toFixed(2)}</span>
+                    <span>${cartTotal.toFixed(2)}TK</span>
                   </div>
                   <button className="w-full mt-4 py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
                     Checkout
