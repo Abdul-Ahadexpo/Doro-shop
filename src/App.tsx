@@ -15,6 +15,10 @@ interface CartItem extends Product {
   quantity: number;
 }
 
+
+
+
+
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showCart, setShowCart] = useState(false);
@@ -22,10 +26,62 @@ function App() {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  // handleCheckout
-const handleCheckout = () => {
-  window.location.href = '../checkout.html';
-};
+  const [cart, setCart] = useState([]); // ✅ Add this to track the cart
+
+  // ✅ Load cart from localStorage when the page loads
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+
+  // ✅ Store cart in localStorage when cart updates
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  // ✅ Cart functions (should NOT be inside handleCheckout)
+  const addToCart = (product) => {
+    setCart((currentCart) => {
+      const updatedCart = [...currentCart];
+      const existingItem = updatedCart.find((item) => item.id === product.id);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        updatedCart.push({ ...product, quantity: 1 });
+      }
+
+      return updatedCart;
+    });
+  };
+
+  const removeFromCart = (productId) => {
+    setCart((currentCart) => currentCart.filter((item) => item.id !== productId));
+  };
+
+  const updateQuantity = (productId, newQuantity) => {
+    if (newQuantity < 1) return;
+
+    setCart((currentCart) =>
+      currentCart.map((item) =>
+        item.id === productId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
+
+  // ✅ Checkout function (only handles redirection)
+  const handleCheckout = () => {
+    localStorage.setItem("cart", JSON.stringify(cart)); // Save before redirecting
+    window.location.href = "../checkout.tsx";
+  };
+}
+
+
+
+
+
 
   
   // The admin password - in a real app, this would be handled securely on the server
@@ -41,6 +97,28 @@ const handleCheckout = () => {
     image: ''
   });
 
+
+
+
+useEffect(() => {
+  const storedCart = localStorage.getItem("cart");
+  if (storedCart) {
+    setCart(JSON.parse(storedCart));
+  }
+}, []);
+
+
+
+
+
+
+
+  
+
+
+
+
+  
 useEffect(() => {
   const productsRef = ref(db, "products");
 
@@ -90,9 +168,9 @@ useEffect(() => {
     }
   };
 
-  const addToCart = (product: Product) => {
-    setCart(currentCart => {
-      const existingItem = currentCart.find(item => item.id === product.id);
+  const addTo = (product: Product) => {
+    set(current => {
+      const existingItem = current.find(item => item.id === product.id);
       if (existingItem) {
         return currentCart.map(item =>
           item.id === product.id
@@ -317,7 +395,7 @@ useEffect(() => {
                   </div>
                   
                  <button onClick={() => { localStorage.setItem("cart", JSON.stringify(cart)); // Save cart in localStorage
-    window.location.href = "checkout.html"; // Redirect to checkout page
+    window.location.href = "checkout.tsx"; // Redirect to checkout page
   }} className="w-full py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Checkout</button>
 
                   
