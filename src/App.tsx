@@ -228,7 +228,7 @@ useEffect(() => {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-900">StyleStore</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Doro-suop</h1>
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setShowCart(!showCart)}
@@ -279,7 +279,7 @@ useEffect(() => {
                       />
                       <div className="flex-1">
                         <h3 className="font-medium">{item.name}</h3>
-                        <p className="text-gray-600">${item.price}</p>
+                        <p className="text-gray-600">{item.price}TK</p>
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
