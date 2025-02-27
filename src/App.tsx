@@ -1,9 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Package, Settings, LogOut, Plus, Trash2, Edit, Lock, Search, User, LogIn } from 'lucide-react';
-import { db, auth } from './firebase';
-import { ref, onValue, push, remove, update, set, get, query, orderByChild, equalTo } from 'firebase/database';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState, useEffect } from "react";
+import {
+  ShoppingCart,
+  Package,
+  Settings,
+  LogOut,
+  Plus,
+  Trash2,
+  Edit,
+  Lock,
+  Search,
+  User,
+  LogIn,
+} from "lucide-react";
+import { db, auth } from "./firebase";
+import {
+  ref,
+  onValue,
+  push,
+  remove,
+  update,
+  set,
+  get,
+  query,
+  orderByChild,
+  equalTo,
+} from "firebase/database";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  User as FirebaseUser,
+} from "firebase/auth";
+import { v4 as uuidv4 } from "uuid";
 
 interface Product {
   id: string;
@@ -24,53 +53,53 @@ function App() {
   const [showCart, setShowCart] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
-  const [email, setEmail] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [authError, setAuthError] = useState('');
-  
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
+  const [email, setEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+
   // The admin password - in a real app, this would be handled securely on the server
-  const ADMIN_PASSWORD = 'foking123';
+  const ADMIN_PASSWORD = "foking123";
 
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [newProduct, setNewProduct] = useState<Partial<Product>>({
-    name: '',
+    name: "",
     price: 0,
-    description: '',
-    image: '',
-    chatLink: ''
+    description: "",
+    image: "",
+    chatLink: "",
   });
 
   // Load cart from localStorage on initial render
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
+    const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       try {
         setCart(JSON.parse(savedCart));
       } catch (error) {
-        console.error('Error parsing cart from localStorage:', error);
-        localStorage.removeItem('cart');
+        console.error("Error parsing cart from localStorage:", error);
+        localStorage.removeItem("cart");
       }
     }
   }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
   // Check if user is admin
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      if (currentUser && currentUser.email === 'admin@doro-suop.com') {
+      if (currentUser && currentUser.email === "admin@doro-suop.com") {
         setIsAdmin(true);
       } else {
         setIsAdmin(false);
@@ -110,17 +139,18 @@ function App() {
   }, []);
 
   // Filter products based on search query
-  const filteredProducts = products.filter(product => 
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Handle checkout - redirects to the chat link of the first item in cart
   function handleCheckout() {
     if (cart.length > 0 && cart[0].chatLink) {
-      window.open(cart[0].chatLink, '_blank');
+      window.open(cart[0].chatLink, "_blank");
     } else {
-      alert('No chat link available for this product.');
+      alert("No chat link available for this product.");
     }
   }
 
@@ -128,7 +158,7 @@ function App() {
     if (password === ADMIN_PASSWORD) {
       setIsAdmin(true);
       setShowLoginModal(false);
-      setPassword('');
+      setPassword("");
       setLoginError(false);
     } else {
       setLoginError(true);
@@ -145,17 +175,17 @@ function App() {
 
   const handleUserAuth = async () => {
     try {
-      setAuthError('');
-      if (authMode === 'register') {
+      setAuthError("");
+      if (authMode === "register") {
         await createUserWithEmailAndPassword(auth, email, userPassword);
       } else {
         await signInWithEmailAndPassword(auth, email, userPassword);
       }
       setShowAuthModal(false);
-      setEmail('');
-      setUserPassword('');
+      setEmail("");
+      setUserPassword("");
     } catch (error: any) {
-      console.error('Authentication error:', error);
+      console.error("Authentication error:", error);
       setAuthError(error.message);
     }
   };
@@ -164,15 +194,15 @@ function App() {
     try {
       await signOut(auth);
     } catch (error) {
-      console.error('Sign out error:', error);
+      console.error("Sign out error:", error);
     }
   };
 
   const addToCart = (product: Product) => {
-    setCart(currentCart => {
-      const existingItem = currentCart.find(item => item.id === product.id);
+    setCart((currentCart) => {
+      const existingItem = currentCart.find((item) => item.id === product.id);
       if (existingItem) {
-        return currentCart.map(item =>
+        return currentCart.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
@@ -183,86 +213,97 @@ function App() {
   };
 
   const removeFromCart = (productId: string) => {
-    setCart(cart.filter(item => item.id !== productId));
+    setCart(cart.filter((item) => item.id !== productId));
   };
 
   const updateQuantity = (productId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
-    setCart(cart.map(item =>
-      item.id === productId
-        ? { ...item, quantity: newQuantity }
-        : item
-    ));
+    setCart(
+      cart.map((item) =>
+        item.id === productId ? { ...item, quantity: newQuantity } : item
+      )
+    );
   };
 
   const addProduct = async () => {
-    if (!newProduct.name || !newProduct.price || !newProduct.description || !newProduct.image) {
-      alert('Please fill in all required fields');
+    if (
+      !newProduct.name ||
+      !newProduct.price ||
+      !newProduct.description ||
+      !newProduct.image
+    ) {
+      alert("Please fill in all required fields");
       return;
     }
-    
+
     if (!user) {
-      alert('You must be logged in to add a product');
+      alert("You must be logged in to add a product");
       setShowAuthModal(true);
       return;
     }
-    
+
     try {
-      const productsRef = ref(db, 'products');
+      const productsRef = ref(db, "products");
       const newProductRef = push(productsRef);
       await set(newProductRef, {
         name: newProduct.name,
         price: Number(newProduct.price),
         description: newProduct.description,
         image: newProduct.image,
-        chatLink: newProduct.chatLink || '',
-        userId: user.uid
+        chatLink: newProduct.chatLink || "",
+        userId: user.uid,
       });
-      
-      setNewProduct({ name: '', price: 0, description: '', image: '', chatLink: '' });
+
+      setNewProduct({
+        name: "",
+        price: 0,
+        description: "",
+        image: "",
+        chatLink: "",
+      });
     } catch (error) {
-      console.error('Error adding product:', error);
-      alert('Failed to add product. Please try again.');
+      console.error("Error adding product:", error);
+      alert("Failed to add product. Please try again.");
     }
   };
 
   const deleteProduct = async (productId: string, productUserId: string) => {
     // Only admin or the product owner can delete
     if (!user || (user.uid !== productUserId && !isAdmin)) {
-      alert('You do not have permission to delete this product');
+      alert("You do not have permission to delete this product");
       return;
     }
-    
+
     try {
       const productRef = ref(db, `products/${productId}`);
       await remove(productRef);
-      setCart(cart.filter(item => item.id !== productId));
+      setCart(cart.filter((item) => item.id !== productId));
     } catch (error) {
-      console.error('Error deleting product:', error);
-      alert('Failed to delete product. Please try again.');
+      console.error("Error deleting product:", error);
+      alert("Failed to delete product. Please try again.");
     }
   };
 
   const startEdit = (product: Product) => {
     // Only admin or the product owner can edit
     if (!user || (user.uid !== product.userId && !isAdmin)) {
-      alert('You do not have permission to edit this product');
+      alert("You do not have permission to edit this product");
       return;
     }
-    
+
     setEditingProduct(product);
     setNewProduct(product);
   };
 
   const saveEdit = async () => {
     if (!editingProduct || !user) return;
-    
+
     // Only admin or the product owner can edit
     if (user.uid !== editingProduct.userId && !isAdmin) {
-      alert('You do not have permission to edit this product');
+      alert("You do not have permission to edit this product");
       return;
     }
-    
+
     try {
       const productRef = ref(db, `products/${editingProduct.id}`);
       await update(productRef, {
@@ -270,18 +311,27 @@ function App() {
         price: Number(newProduct.price),
         description: newProduct.description,
         image: newProduct.image,
-        chatLink: newProduct.chatLink || ''
+        chatLink: newProduct.chatLink || "",
       });
-      
+
       setEditingProduct(null);
-      setNewProduct({ name: '', price: 0, description: '', image: '', chatLink: '' });
+      setNewProduct({
+        name: "",
+        price: 0,
+        description: "",
+        image: "",
+        chatLink: "",
+      });
     } catch (error) {
-      console.error('Error updating product:', error);
-      alert('Failed to update product. Please try again.');
+      console.error("Error updating product:", error);
+      alert("Failed to update product. Please try again.");
     }
   };
 
-  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const cartTotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   if (isLoading) {
     return (
@@ -310,9 +360,9 @@ function App() {
                   setPassword(e.target.value);
                   setLoginError(false);
                 }}
-                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                  loginError ? 'border-red-500' : 'border-gray-300'
+                  loginError ? "border-red-500" : "border-gray-300"
                 }`}
               />
               {loginError && (
@@ -344,7 +394,7 @@ function App() {
             <div className="flex items-center gap-2 mb-4">
               <User className="w-5 h-5 text-purple-600" />
               <h2 className="text-xl font-semibold">
-                {authMode === 'login' ? 'Login' : 'Register'}
+                {authMode === "login" ? "Login" : "Register"}
               </h2>
             </div>
             <div className="space-y-4">
@@ -354,7 +404,7 @@ function App() {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  setAuthError('');
+                  setAuthError("");
                 }}
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 border-gray-300"
               />
@@ -364,14 +414,12 @@ function App() {
                 value={userPassword}
                 onChange={(e) => {
                   setUserPassword(e.target.value);
-                  setAuthError('');
+                  setAuthError("");
                 }}
-                onKeyDown={(e) => e.key === 'Enter' && handleUserAuth()}
+                onKeyDown={(e) => e.key === "Enter" && handleUserAuth()}
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 border-gray-300"
               />
-              {authError && (
-                <p className="text-red-500 text-sm">{authError}</p>
-              )}
+              {authError && <p className="text-red-500 text-sm">{authError}</p>}
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowAuthModal(false)}
@@ -383,17 +431,19 @@ function App() {
                   onClick={handleUserAuth}
                   className="flex-1 py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
                 >
-                  {authMode === 'login' ? 'Login' : 'Register'}
+                  {authMode === "login" ? "Login" : "Register"}
                 </button>
               </div>
               <div className="text-center">
                 <button
-                  onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
+                  onClick={() =>
+                    setAuthMode(authMode === "login" ? "register" : "login")
+                  }
                   className="text-purple-600 hover:text-purple-800 text-sm"
                 >
-                  {authMode === 'login'
+                  {authMode === "login"
                     ? "Don't have an account? Register"
-                    : 'Already have an account? Login'}
+                    : "Already have an account? Login"}
                 </button>
               </div>
             </div>
@@ -478,26 +528,39 @@ function App() {
               </button>
             </div>
             {cart.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">Your cart is empty</p>
+              <p className="text-gray-500 text-center py-8">
+                Your cart is empty
+              </p>
             ) : (
               <>
                 <div className="space-y-4">
-                  {cart.map(item => (
-                    <div key={item.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                      <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
+                  {cart.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg"
+                    >
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
                       <div className="flex-1">
                         <h3 className="font-medium">{item.name}</h3>
                         <p className="text-gray-600">{item.price} TK</p>
                         <div className="flex items-center gap-2 mt-2">
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity - 1)
+                            }
                             className="px-2 py-1 bg-gray-200 rounded"
                           >
                             -
                           </button>
                           <span>{item.quantity}</span>
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity + 1)
+                            }
                             className="px-2 py-1 bg-gray-200 rounded"
                           >
                             +
@@ -539,35 +602,48 @@ function App() {
                 type="text"
                 placeholder="Product Name"
                 value={newProduct.name}
-                onChange={e => setNewProduct({ ...newProduct, name: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, name: e.target.value })
+                }
                 className="w-full px-4 py-2 border rounded-lg"
               />
               <input
                 type="number"
                 placeholder="Price"
                 value={newProduct.price}
-                onChange={e => setNewProduct({ ...newProduct, price: Number(e.target.value) })}
+                onChange={(e) =>
+                  setNewProduct({
+                    ...newProduct,
+                    price: Number(e.target.value),
+                  })
+                }
                 className="w-full px-4 py-2 border rounded-lg"
               />
               <input
                 type="text"
                 placeholder="Description"
                 value={newProduct.description}
-                onChange={e => setNewProduct({ ...newProduct, description: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, description: e.target.value })
+                }
                 className="w-full px-4 py-2 border rounded-lg"
               />
               <input
                 type="text"
                 placeholder="Image URL"
                 value={newProduct.image}
-                onChange={e => setNewProduct({ ...newProduct, image: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, image: e.target.value })
+                }
                 className="w-full px-4 py-2 border rounded-lg"
               />
               <input
                 type="text"
                 placeholder="Chat Link (WhatsApp/Instagram/Messenger)"
-                value={newProduct.chatLink || ''}
-                onChange={e => setNewProduct({ ...newProduct, chatLink: e.target.value })}
+                value={newProduct.chatLink || ""}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, chatLink: e.target.value })
+                }
                 className="w-full px-4 py-2 border rounded-lg"
               />
               <button
@@ -591,45 +667,31 @@ function App() {
         )}
 
         {/* Product List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map(product => (
-            <div key={product.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col">
-              <div className="flex justify-center mb-4">
-                <img src={product.image} alt={product.name} className="w-32 h-32 object-cover rounded-lg" />
-              </div>
-              <h2 className="text-lg font-semibold">{product.name}</h2>
-              <p className="text-gray-500 text-sm my-2">{product.description}</p>
-              <div className="mt-auto pt-4 flex items-center justify-between">
-                <span className="text-xl font-bold">{product.price} TK</span>
-                <div className="flex gap-2">
-                  {user && (user.uid === product.userId || isAdmin) && (
-                    <>
-                      <button
-                        onClick={() => startEdit(product)}
-                        className="p-1 text-blue-600 hover:text-blue-800"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => deleteProduct(product.id, product.userId)}
-                        className="p-1 text-red-500 hover:text-red-700"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+<div className="grid grid-cols-3 gap-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3">
+  {filteredProducts.map(product => (
+    <div key={product.id} className="bg-white p-2 rounded-lg shadow-md flex flex-col max-w-[120px]">
+      <div className="flex justify-center mb-2">
+        <img src={product.image} alt={product.name} className="w-20 h-20 object-cover rounded-lg" />
+      </div>
+      <h2 className="text-xs font-semibold text-center">{product.name}</h2>
+      <p className="text-gray-500 text-xs my-1 text-center">{product.description}</p>
+      <div className="mt-auto pt-2 flex flex-col items-center">
+        <span className="text-sm font-bold">{product.price} TK</span>
+        <button
+          onClick={() => addToCart(product)}
+          className="py-1 px-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-1 text-xs"
+        >
+          <ShoppingCart className="w-4 h-4" />
+          Add
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
+
+
+
       </main>
     </div>
   );
