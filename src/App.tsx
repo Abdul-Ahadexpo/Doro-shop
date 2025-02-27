@@ -666,57 +666,33 @@ function App() {
           </div>
         )}
 
-        {/* Product List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white p-4 rounded-lg shadow-md flex flex-col"
-            >
-              <div className="flex justify-center mb-4">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-32 h-32 object-cover rounded-lg"
-                />
-              </div>
-              <h2 className="text-lg font-semibold">{product.name}</h2>
-              <p className="text-gray-500 text-sm my-2">
-                {product.description}
-              </p>
-              <div className="mt-auto pt-4 flex items-center justify-between">
-                <span className="text-xl font-bold">{product.price} TK</span>
-                <div className="flex gap-2">
-                  {user && (user.uid === product.userId || isAdmin) && (
-                    <>
-                      <button
-                        onClick={() => startEdit(product)}
-                        className="p-1 text-blue-600 hover:text-blue-800"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() =>
-                          deleteProduct(product.id, product.userId)
-                        }
-                        className="p-1 text-red-500 hover:text-red-700"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Product List */}
+<div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+  {filteredProducts.map(product => (
+    <div key={product.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col max-w-full lg:max-w-[300px]">
+      <div className="flex justify-center mb-4">
+        <img src={product.image} alt={product.name} className="w-32 h-32 object-cover rounded-lg" />
+      </div>
+      <h2 className="text-lg font-semibold">{product.name}</h2>
+      <p className="text-gray-500 text-sm my-2">{product.description}</p>
+      <div className="mt-auto pt-4 flex flex-col items-center">
+        <span className="text-xl font-bold">{product.price} TK</span>
+        <button
+          onClick={() => addToCart(product)}
+          className="py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
+        >
+          <ShoppingCart className="w-5 h-5" />
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
+
+
+
+        
       </main>
     </div>
   );
