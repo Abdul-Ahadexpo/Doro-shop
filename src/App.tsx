@@ -676,8 +676,16 @@ function App() {
 
 
 
- {/* Product List */}
-<div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+ {/* Toggle Button */}
+<button
+  onClick={() => setIsSingleColumn(prev => !prev)}
+  className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+>
+  Toggle Grid
+</button>
+
+{/* Product List */}
+<div className={`grid ${isSingleColumn ? "grid-cols-1" : "grid-cols-2"} gap-3 sm:grid-cols-2 lg:grid-cols-3`}>
   {filteredProducts.map(product => (
     <div key={product.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col max-w-full lg:max-w-[300px]">
       <div className="flex justify-center mb-4">
@@ -698,6 +706,7 @@ function App() {
     </div>
   ))}
 </div>
+
 
 
 
