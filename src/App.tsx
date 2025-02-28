@@ -34,7 +34,7 @@ import {
 } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 
-import Swal from 'sweetalert2';
+
 
 interface Product {
   id: string;
@@ -207,57 +207,33 @@ function App() {
 
   
 
-const addToCart = (product: Product) => {
-  setCart(currentCart => {
-    const existingItem = currentCart.find(item => item.id === product.id);
-    if (existingItem) {
-      return currentCart.map(item =>
-        item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
-    }
-    return [...currentCart, { ...product, quantity: 1 }];
-  });
+  const addToCart = (product: Product) => {
+    setCart((currentCart) => {
+      const existingItem = currentCart.find((item) => item.id === product.id);
+      if (existingItem) {
+        return currentCart.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...currentCart, { ...product, quantity: 1 }];
+    });
+  };
 
-  // Show SweetAlert2 notification
-  Swal.fire({
-    title: "Added to Cart!",
-    text: `${product.name} has been added to your cart.`,
-    icon: "success",
-    timer: 2000,
-    showConfirmButton: false,
-    toast: true,
-    position: "top-end",
-  });
-};
+
+
+
+  
+  const removeFromCart = (productId: string) => {
+    setCart(cart.filter((item) => item.id !== productId));
+  };
 
 
 
 
 
   
-const removeFromCart = (productId: string) => {
-  setCart(currentCart => {
-    const product = currentCart.find(item => item.id === productId);
-    
-    if (!product) return currentCart; // If product isn't found, return unchanged cart
-
-    // Show SweetAlert2 notification
-    Swal.fire({
-      title: "Removed from Cart!",
-      text: `${product.name} has been removed from your cart.`,
-      icon: "warning",
-      timer: 2000,
-      showConfirmButton: false,
-      toast: true,
-      position: "top-end",
-    });
-
-    return currentCart.filter(item => item.id !== productId);
-  });
-};
-
 
 
   
