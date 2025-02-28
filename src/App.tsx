@@ -677,26 +677,26 @@ function App() {
 
 
 {/* Product List */}
-<div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-4">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 md:px-8">
   {filteredProducts.map(product => (
     <div 
       key={product.id} 
-      className="bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-lg flex flex-col max-w-full lg:max-w-[320px] transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+      className="bg-white p-6 rounded-2xl shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl flex flex-col max-w-full"
     >
       <div className="flex justify-center mb-4">
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-32 h-32 object-cover rounded-xl transition-all duration-300 hover:rotate-3 hover:scale-110"
+          className="w-36 h-36 object-cover rounded-xl shadow-md"
         />
       </div>
       <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
-      <p className="text-gray-600 text-sm my-2">{product.description}</p>
+      <p className="text-gray-500 text-sm my-2">{product.description}</p>
       <div className="mt-auto pt-4 flex flex-col items-center">
         <span className="text-xl font-bold text-purple-700">{product.price} TK</span>
         <button
           onClick={() => addToCart(product)}
-          className="mt-3 py-2 px-5 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 flex items-center gap-2"
+          className="mt-2 py-2 px-5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all flex items-center gap-2 shadow-md"
         >
           <ShoppingCart className="w-5 h-5" />
           Add to Cart
@@ -705,6 +705,7 @@ function App() {
     </div>
   ))}
 </div>
+
 
 
 
