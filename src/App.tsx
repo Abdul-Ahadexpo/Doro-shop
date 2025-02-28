@@ -676,28 +676,27 @@ function App() {
 
 
 
- {/* Toggle Button */}
-<button
-  onClick={() => setIsSingleColumn(prev => !prev)}
-  className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
->
-  Toggle Grid
-</button>
-
 {/* Product List */}
-<div className={`grid ${isSingleColumn ? "grid-cols-1" : "grid-cols-2"} gap-3 sm:grid-cols-2 lg:grid-cols-3`}>
+<div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-4">
   {filteredProducts.map(product => (
-    <div key={product.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col max-w-full lg:max-w-[300px]">
+    <div 
+      key={product.id} 
+      className="bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-lg flex flex-col max-w-full lg:max-w-[320px] transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+    >
       <div className="flex justify-center mb-4">
-        <img src={product.image} alt={product.name} className="w-32 h-32 object-cover rounded-lg" />
+        <img 
+          src={product.image} 
+          alt={product.name} 
+          className="w-32 h-32 object-cover rounded-xl transition-all duration-300 hover:rotate-3 hover:scale-110"
+        />
       </div>
-      <h2 className="text-lg font-semibold">{product.name}</h2>
-      <p className="text-gray-500 text-sm my-2">{product.description}</p>
+      <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
+      <p className="text-gray-600 text-sm my-2">{product.description}</p>
       <div className="mt-auto pt-4 flex flex-col items-center">
-        <span className="text-xl font-bold">{product.price} TK</span>
+        <span className="text-xl font-bold text-purple-700">{product.price} TK</span>
         <button
           onClick={() => addToCart(product)}
-          className="py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
+          className="mt-3 py-2 px-5 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 flex items-center gap-2"
         >
           <ShoppingCart className="w-5 h-5" />
           Add to Cart
@@ -706,6 +705,7 @@ function App() {
     </div>
   ))}
 </div>
+
 
 
 
