@@ -671,7 +671,13 @@ function App() {
 
 
         
-       {/* Toggle Button */}
+
+
+
+
+
+  <div>
+      {/* Toggle Button */}
       <button
         onClick={() => setIsSingleColumn(!isSingleColumn)}
         className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
@@ -726,6 +732,15 @@ function App() {
           </div>
         ))}
       </div>
+    </div>
+
+
+
+
+
+
+
+        
 
 
 
